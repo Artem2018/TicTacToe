@@ -15,12 +15,14 @@ public class Game {
     private int height;
     private boolean singlePlay;
     private char currentPlayer;
+    private boolean onlineMode;
 
-    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay){
+    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay,boolean onlineMode){
         this.stage = primaryStage;
         this.mainMenu = mainMenu;
         this.singlePlay = singleplay;
         this.numOfCells = numOfCells;
+        this.onlineMode = onlineMode;
         System.out.println(side + " going first");
         if (side.equals("X")){
             currentPlayer = 'X';
