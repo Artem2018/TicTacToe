@@ -33,7 +33,7 @@ public class Main extends Application {
 
         //logo
         try {
-            logo = new Image(new FileInputStream("/src/img/logo.png"));
+            logo = new Image(new FileInputStream("/home/artem/Desktop/TicTacToe_/src/img/logo.png"));
         } catch (IOException e){
             e.printStackTrace();
         }
