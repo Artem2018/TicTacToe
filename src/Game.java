@@ -1,5 +1,6 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -42,6 +43,11 @@ class Game {
             height = 600;
         }
         Grid();
+
+//        if (onlineMode){
+//
+//        }
+
     }
 
     private void Grid(){
@@ -55,6 +61,7 @@ class Game {
         }
         game = new Scene(gridPane,width,height);
         stage.setScene(game);
+
     }
 
     private boolean isBoardFull(){
@@ -123,6 +130,7 @@ class Game {
 
     public class Cell extends Pane {
         private char player = ' ';
+
         Cell(){
             Rectangle r = new Rectangle(150, 150);
             r.setFill(Color.TRANSPARENT);
@@ -161,10 +169,11 @@ class Game {
             }
         }
 
-
          void put(){
             if (player == ' ' && currentPlayer != ' '){
                 setPlayer(currentPlayer);
+
+
                 if (hasWon(currentPlayer)){
                     Alert won  = new Alert(Alert.AlertType.INFORMATION);
                     won.setTitle("Winning");
@@ -187,5 +196,7 @@ class Game {
             }
         }
     }
+    void InitializeServer(){
 
+    }
 }

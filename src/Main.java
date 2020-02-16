@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -59,6 +60,11 @@ public class Main extends Application {
         cellnum.setContentText("Size:");
         cellnum.setResizable(true);
 
+        TextInputDialog td = new TextInputDialog();
+        td.setHeaderText("Port");
+        td.setHeaderText("Enter the port number");
+        td.setResizable(true);
+
         // 1 button
         Button start1player = new Button("Single Game");
         start1player.setOnAction(actionEvent -> {
@@ -68,6 +74,7 @@ public class Main extends Application {
         start1player.setScaleX(1.5);
         start1player.setScaleY(1.5);
         start1player.setMinWidth(115);
+        start1player.setDisable(true);                  // coming soon with AI implementation
 
         // 2 button
         Button twoPlayers = new Button("2 players");
@@ -82,8 +89,14 @@ public class Main extends Application {
         // 3 button
         Button onlineMode = new Button("Play online");
         onlineMode.setOnAction(actionEvent -> {
+            Optional<String> str = td.showAndWait();
             Optional<String> res = choiceDialog.showAndWait();
-            res.ifPresent(s -> new Game(primaryStage,mainMenu, s, cellnumb,false,true));
+            if (res.isPresent() && str.isPresent()) {
+                int port = Integer.parseInt(str.get());
+                System.out.println(port);
+                new Game(primaryStage, mainMenu, res.get(), cellnumb, false, true);
+            }
+
         });
         onlineMode.setScaleX(1.5);
         onlineMode.setScaleY(1.5);
