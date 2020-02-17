@@ -1,6 +1,5 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -22,13 +21,19 @@ class Game {
     private boolean singlePlay;
     private char currentPlayer;
     private boolean onlineMode;
+    private String ip;
+    private int port;
 
-    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay,boolean onlineMode){
+
+    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay,boolean onlineMode,String ip,int port){
         this.stage = primaryStage;
         this.mainMenu = mainMenu;
         this.singlePlay = singleplay;
         this.numOfCells = numOfCells;
         this.onlineMode = onlineMode;
+        this.ip = ip;
+        this.port = port;
+
         System.out.println(side + " going first");
         if (side.equals("X")){
             currentPlayer = 'X';
@@ -43,11 +48,6 @@ class Game {
             height = 600;
         }
         Grid();
-
-//        if (onlineMode){
-//
-//        }
-
     }
 
     private void Grid(){
@@ -61,6 +61,13 @@ class Game {
         }
         game = new Scene(gridPane,width,height);
         stage.setScene(game);
+
+        if (onlineMode){
+            System.out.println(ip + " " + port);
+            Client client = new Client(ip,port);
+            client.start();
+        }
+
 
     }
 

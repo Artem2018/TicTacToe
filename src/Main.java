@@ -60,16 +60,23 @@ public class Main extends Application {
         cellnum.setContentText("Size:");
         cellnum.setResizable(true);
 
-        TextInputDialog td = new TextInputDialog();
-        td.setHeaderText("Port");
-        td.setHeaderText("Enter the port number");
-        td.setResizable(true);
+        TextInputDialog tdi = new TextInputDialog();
+        tdi.setHeaderText("IP");
+        tdi.setContentText("Enter IP");
+        tdi.setResizable(true);
+
+        TextInputDialog tdp = new TextInputDialog();
+        tdp.setHeaderText("Port");
+        tdp.setContentText("Enter the port number");
+        tdp.setResizable(true);
+        
+
 
         // 1 button
         Button start1player = new Button("Single Game");
         start1player.setOnAction(actionEvent -> {
             Optional<String> res = choiceDialog.showAndWait();
-            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, true,false));
+            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, true,false,null,0));
         });
         start1player.setScaleX(1.5);
         start1player.setScaleY(1.5);
@@ -80,7 +87,7 @@ public class Main extends Application {
         Button twoPlayers = new Button("2 players");
         twoPlayers.setOnAction(actionEvent -> {
             Optional<String> res = choiceDialog.showAndWait();
-            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, false,false));
+            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, false,false,null,0));
         });
         twoPlayers.setScaleX(1.5);
         twoPlayers.setScaleY(1.5);
@@ -89,12 +96,13 @@ public class Main extends Application {
         // 3 button
         Button onlineMode = new Button("Play online");
         onlineMode.setOnAction(actionEvent -> {
-            Optional<String> str = td.showAndWait();
+            Optional<String> stri = tdi.showAndWait();
+            Optional<String> str = tdp.showAndWait();
             Optional<String> res = choiceDialog.showAndWait();
-            if (res.isPresent() && str.isPresent()) {
+            if (res.isPresent() && str.isPresent() && stri.isPresent()) {
+                String ip = stri.get();
                 int port = Integer.parseInt(str.get());
-                System.out.println(port);
-                new Game(primaryStage, mainMenu, res.get(), cellnumb, false, true);
+                new Game(primaryStage, mainMenu, res.get(), cellnumb, false, true,ip,port);
             }
 
         });
