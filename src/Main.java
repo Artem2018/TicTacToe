@@ -12,8 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,8 @@ public class Main extends Application {
     private ChoiceDialog<String> cellnum;
     private Scene mainMenu;
     private int cellnumb = 3;
+    private Socket socket;
+    private InetAddress inetAddress;
 
     @Override
     public void start(Stage primaryStage) {
@@ -60,10 +63,6 @@ public class Main extends Application {
         cellnum.setContentText("Size:");
         cellnum.setResizable(true);
 
-        TextInputDialog tdi = new TextInputDialog();
-        tdi.setHeaderText("IP");
-        tdi.setContentText("Enter IP");
-        tdi.setResizable(true);
 
         TextInputDialog tdp = new TextInputDialog();
         tdp.setHeaderText("Port");
@@ -76,7 +75,7 @@ public class Main extends Application {
         Button start1player = new Button("Single Game");
         start1player.setOnAction(actionEvent -> {
             Optional<String> res = choiceDialog.showAndWait();
-            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, true,false,null,0));
+            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, true,false));
         });
         start1player.setScaleX(1.5);
         start1player.setScaleY(1.5);
@@ -87,7 +86,7 @@ public class Main extends Application {
         Button twoPlayers = new Button("2 players");
         twoPlayers.setOnAction(actionEvent -> {
             Optional<String> res = choiceDialog.showAndWait();
-            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, false,false,null,0));
+            res.ifPresent(s -> new Game(primaryStage, mainMenu, s, cellnumb, false,false));
         });
         twoPlayers.setScaleX(1.5);
         twoPlayers.setScaleY(1.5);
@@ -96,15 +95,18 @@ public class Main extends Application {
         // 3 button
         Button onlineMode = new Button("Play online");
         onlineMode.setOnAction(actionEvent -> {
-            Optional<String> stri = tdi.showAndWait();
             Optional<String> str = tdp.showAndWait();
             Optional<String> res = choiceDialog.showAndWait();
-            if (res.isPresent() && str.isPresent() && stri.isPresent()) {
-                String ip = stri.get();
+            if (res.isPresent() && str.isPresent()) {
                 int port = Integer.parseInt(str.get());
-                new Game(primaryStage, mainMenu, res.get(), cellnumb, false, true,ip,port);
+                try {
+                    inetAddress = InetAddress.getLocalHost();
+                    socket = new Socket(inetAddress, port);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                new Game(primaryStage, mainMenu, res.get(), cellnumb, false, true, port, socket);
             }
-
         });
         onlineMode.setScaleX(1.5);
         onlineMode.setScaleY(1.5);

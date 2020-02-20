@@ -8,6 +8,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.net.Socket;
+
 class Game {
 
     private Stage stage;
@@ -21,18 +24,20 @@ class Game {
     private boolean singlePlay;
     private char currentPlayer;
     private boolean onlineMode;
-    private String ip;
     private int port;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private ObjectInputStream ois ;
+    private ObjectOutputStream oos;
+    private Player player;
 
-
-    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay,boolean onlineMode,String ip,int port){
+    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells,boolean singleplay,boolean onlineMode){
         this.stage = primaryStage;
         this.mainMenu = mainMenu;
         this.singlePlay = singleplay;
         this.numOfCells = numOfCells;
         this.onlineMode = onlineMode;
-        this.ip = ip;
-        this.port = port;
 
         System.out.println(side + " going first");
         if (side.equals("X")){
@@ -49,6 +54,23 @@ class Game {
         }
         Grid();
     }
+    Game(Stage primaryStage, Scene mainMenu, String side, int numOfCells, boolean singleplay, boolean onlineMode, int port, Socket socket){
+        this(primaryStage,mainMenu,side,numOfCells,singleplay,onlineMode);
+        this.port = port;
+        this.socket = socket;
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            oos = new ObjectOutputStream(socket.getOutputStream());
+            ois = new ObjectInputStream(socket.getInputStream());
+            player = (Player) ois.readObject();
+            System.out.println(player);
+
+        } catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
 
     private void Grid(){
         cell = new Cell[numOfCells][numOfCells];
@@ -61,13 +83,6 @@ class Game {
         }
         game = new Scene(gridPane,width,height);
         stage.setScene(game);
-
-        if (onlineMode){
-            System.out.println(ip + " " + port);
-            Client client = new Client(ip,port);
-            client.start();
-        }
-
 
     }
 
@@ -133,6 +148,7 @@ class Game {
         }
         return false;
     }
+
 
 
     public class Cell extends Pane {
@@ -202,8 +218,5 @@ class Game {
                 }
             }
         }
-    }
-    void InitializeServer(){
-
     }
 }
